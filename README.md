@@ -29,7 +29,7 @@ Built with React, Node.js/Express, and the Anthropic Claude API.
 |-------|-----------|
 | Frontend | React 18, CSS custom properties |
 | Backend | Node.js, Express |
-| AI | Anthropic Claude API (claude-opus-4-5) |
+| AI | Anthropic Claude API (claude-haiku-4-5) |
 | PDF Parsing | pdf-parse |
 | File Uploads | Multer |
 

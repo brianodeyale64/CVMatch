@@ -55,17 +55,36 @@ Return this exact JSON structure:
 
 Be specific, honest and actionable. The strengths array should have 3-5 items. The gaps array should have 2-4 items. The cvTweaks array should have 3-5 items.`;
 
-    const message = await client.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 4000,
-      messages: [{ role: 'user', content: prompt }],
-    });
+    let message;
+    try {
+      message = await client.messages.create({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 4000,
+        messages: [{ role: 'user', content: prompt }],
+      });
+    } catch (apiErr) {
+      console.error('Claude API error:', apiErr);
+      if (apiErr.status === 429) {
+        return res.status(429).json({ error: 'The AI service is receiving too many requests right now. Please try again shortly.' });
+      }
+      if (apiErr.status === 529 || apiErr.error?.error?.type === 'overloaded_error') {
+        return res.status(503).json({ error: 'The AI service is temporarily overloaded. Please try again in a moment.' });
+      }
+      return res.status(502).json({ error: 'The AI service could not be reached. Please try again.' });
+    }
 
     const raw = message.content[0].text.trim();
     const jsonStart = raw.indexOf('{');
     const jsonEnd = raw.lastIndexOf('}') + 1;
     const jsonStr = raw.slice(jsonStart, jsonEnd);
-    const result = JSON.parse(jsonStr);
+
+    let result;
+    try {
+      result = JSON.parse(jsonStr);
+    } catch (parseErr) {
+      console.error('Failed to parse Claude response as JSON:', parseErr, raw);
+      return res.status(502).json({ error: 'The AI returned an unexpected response format. Please try again.' });
+    }
 
     res.json(result);
   } catch (err) {
