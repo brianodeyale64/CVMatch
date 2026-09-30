@@ -15,8 +15,8 @@ function App() {
     setResult(null);
     try {
       const res = await fetch('/api/analyse', { method: 'POST', body: formData });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Analysis failed');
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data) throw new Error(data?.error || 'Analysis failed. Please try again.');
       setResult(data);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {

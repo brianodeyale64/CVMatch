@@ -1,28 +1,47 @@
 import React, { useState, useRef } from 'react';
 import './InputForm.css';
 
+const MAX_PDF_BYTES = 5 * 1024 * 1024; // matches the server's upload limit
+
 function InputForm({ onSubmit, loading, error }) {
   const [cvText, setCvText] = useState('');
   const [cvFile, setCvFile] = useState(null);
   const [jobDesc, setJobDesc] = useState('');
   const [inputMode, setInputMode] = useState('text'); // 'text' | 'file'
   const [dragging, setDragging] = useState(false);
+  const [fileError, setFileError] = useState('');
   const fileRef = useRef();
+
+  const acceptFile = (f) => {
+    if (!f) return false;
+    if (f.type !== 'application/pdf' && !/\.pdf$/i.test(f.name)) {
+      setFileError(`"${f.name}" is not a PDF. Please choose a PDF or paste your CV text instead.`);
+      return false;
+    }
+    if (f.size > MAX_PDF_BYTES) {
+      setFileError(`"${f.name}" is larger than 5 MB. Please choose a smaller PDF or paste your CV text instead.`);
+      return false;
+    }
+    setFileError('');
+    setCvFile(f);
+    return true;
+  };
 
   const handleFileChange = (e) => {
     const f = e.target.files[0];
-    if (f) { setCvFile(f); setCvText(''); }
+    e.target.value = ''; // so picking the same file again still fires onChange
+    if (acceptFile(f)) setCvText('');
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
     setDragging(false);
-    const f = e.dataTransfer.files[0];
-    if (f && f.type === 'application/pdf') { setCvFile(f); setInputMode('file'); }
+    if (acceptFile(e.dataTransfer.files[0])) setInputMode('file');
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setFileError('');
     const fd = new FormData();
     fd.append('jobDescription', jobDesc);
     if (inputMode === 'file' && cvFile) {
@@ -92,7 +111,7 @@ function InputForm({ onSubmit, loading, error }) {
                   <span className="file-name">{cvFile.name}</span>
                   <button
                     type="button" className="remove-file" aria-label="Remove file"
-                    onClick={(e) => { e.stopPropagation(); setCvFile(null); }}
+                    onClick={(e) => { e.stopPropagation(); setCvFile(null); setFileError(''); }}
                   >
                     remove
                   </button>
@@ -130,9 +149,9 @@ function InputForm({ onSubmit, loading, error }) {
         </section>
       </div>
 
-      {error && (
+      {(fileError || error) && (
         <div className="error-note" role="alert">
-          <span className="error-hand">hold on —</span> {error}
+          <span className="error-hand">hold on —</span> {fileError || error}
         </div>
       )}
 

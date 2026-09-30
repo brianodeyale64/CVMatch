@@ -7,7 +7,19 @@ const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-router.post('/', upload.single('cv'), async (req, res) => {
+// Run multer ourselves so upload errors come back as JSON instead of Express's HTML error page
+const uploadCv = (req, res, next) => {
+  upload.single('cv')(req, res, (err) => {
+    if (!err) return next();
+    if (err instanceof multer.MulterError && err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(413).json({ error: 'That PDF is larger than 5 MB. Please upload a smaller file or paste your CV text instead.' });
+    }
+    console.error('Upload error:', err);
+    return res.status(400).json({ error: 'The upload could not be read. Please try again.' });
+  });
+};
+
+router.post('/', uploadCv, async (req, res) => {
   try {
     const { jobDescription } = req.body;
 
@@ -18,8 +30,22 @@ router.post('/', upload.single('cv'), async (req, res) => {
     let cvText = req.body.cvText || '';
 
     if (req.file) {
-      const pdfData = await pdf(req.file.buffer);
+      if (!req.file.buffer.subarray(0, 1024).includes('%PDF-')) {
+        return res.status(400).json({ error: 'That file is not a PDF. Please upload a PDF or paste your CV text instead.' });
+      }
+
+      let pdfData;
+      try {
+        pdfData = await pdf(req.file.buffer);
+      } catch (pdfErr) {
+        console.error('PDF parse error:', pdfErr);
+        return res.status(400).json({ error: 'That PDF could not be read. It may be damaged or password-protected. Please try another file or paste your CV text instead.' });
+      }
       cvText = pdfData.text;
+
+      if (!cvText.trim()) {
+        return res.status(422).json({ error: 'No text could be found in that PDF. It may be a scanned image. Please paste your CV text instead.' });
+      }
     }
 
     if (!cvText.trim()) {
