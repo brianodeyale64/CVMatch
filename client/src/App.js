@@ -15,9 +15,10 @@ function App() {
     setResult(null);
     try {
       const res = await fetch('/api/analyse', { method: 'POST', body: formData });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Analysis failed');
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data) throw new Error(data?.error || 'Analysis failed. Please try again.');
       setResult(data);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -25,13 +26,17 @@ function App() {
     }
   };
 
-  const handleReset = () => { setResult(null); setError(''); };
+  const handleReset = () => {
+    setResult(null);
+    setError('');
+    // drop any #section anchor left over from the results page
+    if (window.location.hash) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  };
 
   return (
     <div className="app">
-      <div className="grid-bg" />
-      <div className="glow-orb glow-1" />
-      <div className="glow-orb glow-2" />
       <Header />
       <main className="main">
         {!result ? (
@@ -40,6 +45,10 @@ function App() {
           <Results data={result} onReset={handleReset} />
         )}
       </main>
+      <footer className="colophon">
+        <span className="eyebrow">CVMatch · Read by Claude</span>
+        <span className="eyebrow">React · Express · Anthropic API</span>
+      </footer>
     </div>
   );
 }
