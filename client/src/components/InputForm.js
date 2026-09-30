@@ -99,10 +99,13 @@ function InputForm({ onSubmit, loading, error }) {
               onClick={() => fileRef.current.click()}
               onDrop={handleDrop}
               onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
-              onDragLeave={() => setDragging(false)}
+              onDragLeave={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setDragging(false); }}
               role="button"
               tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') fileRef.current.click(); }}
+              onKeyDown={(e) => {
+                if (e.target !== e.currentTarget) return; // leave keys on the remove button alone
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileRef.current.click(); }
+              }}
             >
               <input ref={fileRef} type="file" accept=".pdf" onChange={handleFileChange} hidden />
               {cvFile ? (
@@ -170,7 +173,7 @@ function InputForm({ onSubmit, loading, error }) {
         </button>
         <span className="submit-note">
           {loading
-            ? 'The red pen is out. This usually takes a few seconds.'
+            ? 'The red pen is out. This can take up to half a minute.'
             : 'Scored, annotated and a cover letter drafted.'}
         </span>
       </div>

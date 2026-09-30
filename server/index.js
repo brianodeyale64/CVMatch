@@ -12,6 +12,10 @@ if (!process.env.ANTHROPIC_API_KEY) {
 const app = express();
 const PORT = process.env.PORT || 5050;
 
+// Trust X-Forwarded-For only from a proxy on this machine (the React dev proxy, or a local
+// reverse proxy) so the rate limiter sees the real client IP without letting remote clients spoof it
+app.set('trust proxy', 'loopback');
+
 const analyseLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,

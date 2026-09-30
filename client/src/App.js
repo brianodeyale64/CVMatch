@@ -26,7 +26,14 @@ function App() {
     }
   };
 
-  const handleReset = () => { setResult(null); setError(''); };
+  const handleReset = () => {
+    setResult(null);
+    setError('');
+    // drop any #section anchor left over from the results page
+    if (window.location.hash) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+  };
 
   return (
     <div className="app">
