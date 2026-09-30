@@ -1,48 +1,30 @@
 .app {
   min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;
-}
-
-.grid-bg {
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(124, 255, 212, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(124, 255, 212, 0.03) 1px, transparent 1px);
-  background-size: 48px 48px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.glow-orb {
-  position: fixed;
-  border-radius: 50%;
-  filter: blur(120px);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.glow-1 {
-  width: 600px;
-  height: 600px;
-  background: rgba(124, 255, 212, 0.06);
-  top: -200px;
-  right: -200px;
-}
-
-.glow-2 {
-  width: 400px;
-  height: 400px;
-  background: rgba(116, 179, 255, 0.05);
-  bottom: 0;
-  left: -100px;
+  display: flex;
+  flex-direction: column;
 }
 
 .main {
-  position: relative;
-  z-index: 1;
-  max-width: 900px;
+  width: 100%;
+  max-width: var(--measure);
   margin: 0 auto;
-  padding: 0 24px 80px;
+  padding: 0 24px 96px;
+  flex: 1;
+}
+
+.colophon {
+  max-width: var(--measure);
+  margin: 0 auto;
+  width: calc(100% - 48px);
+  border-top: 1px solid var(--ink);
+  padding: 14px 0 32px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .main { padding: 0 16px 72px; }
+  .colophon { width: calc(100% - 32px); }
 }

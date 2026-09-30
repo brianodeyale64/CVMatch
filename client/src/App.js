@@ -18,6 +18,7 @@ function App() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Analysis failed');
       setResult(data);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -29,9 +30,6 @@ function App() {
 
   return (
     <div className="app">
-      <div className="grid-bg" />
-      <div className="glow-orb glow-1" />
-      <div className="glow-orb glow-2" />
       <Header />
       <main className="main">
         {!result ? (
@@ -40,6 +38,10 @@ function App() {
           <Results data={result} onReset={handleReset} />
         )}
       </main>
+      <footer className="colophon">
+        <span className="eyebrow">CVMatch · Read by Claude</span>
+        <span className="eyebrow">React · Express · Anthropic API</span>
+      </footer>
     </div>
   );
 }

@@ -13,7 +13,7 @@ Built with React, Node.js/Express, and the Anthropic Claude API.
 
 ## Features
 
-- **Match Score** — 0–100 score with visual ring indicator
+- **Match Score** — 0–100 score, circled in red pen
 - **Verdict** — Strong / Good / Partial / Weak match classification
 - **Strengths** — What makes you a great fit for the role
 - **Gap Analysis** — Missing skills/experience with actionable fixes
@@ -27,7 +27,7 @@ Built with React, Node.js/Express, and the Anthropic Claude API.
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | React 18, CSS custom properties |
+| Frontend | React 18, CSS custom properties (editorial "red pen" design: Fraunces, Newsreader, JetBrains Mono, Caveat) |
 | Backend | Node.js, Express |
 | AI | Anthropic Claude API (claude-haiku-4-5) |
 | PDF Parsing | pdf-parse |
