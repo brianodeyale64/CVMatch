@@ -61,7 +61,9 @@ cp .env.example .env
 npm run dev
 ```
 
-This starts both the Express server (port 5000) and React dev server (port 3000) concurrently.
+This starts both the Express server (port 5050) and React dev server (port 3000) concurrently.
+
+> **Note:** on macOS, port 5000 is often held by the AirPlay Receiver (System Settings → General → AirDrop & Handoff), which is why the default port here is 5050 instead.
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
@@ -96,7 +98,7 @@ cvmatch/
 | Variable | Description |
 |----------|-------------|
 | `ANTHROPIC_API_KEY` | Your Anthropic Claude API key |
-| `PORT` | Server port (default: 5000) |
+| `PORT` | Server port (default: 5050) |
 
 ---
 
