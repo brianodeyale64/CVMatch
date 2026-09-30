@@ -109,7 +109,7 @@ cvmatch/
 2. The Express server extracts text from the PDF if needed
 3. A structured prompt is sent to the Claude API asking for a JSON analysis
 4. Claude returns match score, strengths, gaps, CV tweaks, and a cover letter
-5. The React frontend renders the results across tabbed sections
+5. The React frontend renders the results as a single marked-up review page: the verdict, strengths and gaps, CV edits, and the cover letter
 
 ---
 
