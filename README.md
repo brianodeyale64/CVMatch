@@ -6,7 +6,8 @@ Built with React, Node.js/Express, and the Anthropic Claude API.
 
 ![Status](https://img.shields.io/badge/status-active-brightgreen) ![Node](https://img.shields.io/badge/node-%3E%3D18-blue) ![React](https://img.shields.io/badge/react-18-61dafb)
 
-![CVMatch screenshot](docs/screenshot.png)
+![CVMatch homepage](docs/homepage.png)
+![CVMatch analysis results](docs/screenshot.png)
 
 ---
 
