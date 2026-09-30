@@ -4,7 +4,9 @@ An AI-powered job application assistant that analyses your CV against a job desc
 
 Built with React, Node.js/Express, and the Anthropic Claude API.
 
-![CVMatch Demo](https://img.shields.io/badge/status-active-brightgreen) ![Node](https://img.shields.io/badge/node-%3E%3D18-blue) ![React](https://img.shields.io/badge/react-18-61dafb)
+![Status](https://img.shields.io/badge/status-active-brightgreen) ![Node](https://img.shields.io/badge/node-%3E%3D18-blue) ![React](https://img.shields.io/badge/react-18-61dafb)
+
+![CVMatch screenshot](docs/screenshot.png)
 
 ---
 
